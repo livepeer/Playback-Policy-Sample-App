@@ -1,10 +1,16 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import { ConnectKitButton } from 'connectkit'
-import styles from '../styles/Home.module.css'
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
+import { ConnectKitButton } from 'connectkit';
+import styles from '../styles/Home.module.css';
 
 const Home: NextPage = () => {
+
+  const privateKey = process.env.PRIVATE_KEY;
+
+
+  async function authorize() {}
+
   return (
     <div className={styles.container}>
       <Head>
@@ -17,19 +23,18 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>
           <a href='https://livepeer.studio'>Livepeer Studio</a> Playback Policy
         </h1>
-
-        
         <ConnectKitButton />
-        
-
         <div className={styles.grid}>
-          <div className={styles.card}>
-          Hello
-          </div>
+          <a className={styles.card} href='stream'>
+            <h2>Restrict a Stream &rarr;</h2>
+          </a>
+          <button className={styles.card} onClick={authorize}>
+            <h2>View Stream &rarr;</h2>
+          </button>
         </div>
       </main>
     </div>
   );
-}
+};
 
-export default Home
+export default Home;

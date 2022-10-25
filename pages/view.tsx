@@ -10,7 +10,6 @@ export default function view() {
         <Player
           // playbackId={ }
           showPipButton
-
         />
       </div>
     </div>
