@@ -1,15 +1,22 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import Router, { useRouter } from 'next/router';
 import { ConnectKitButton } from 'connectkit';
 import styles from '../styles/Home.module.css';
+import { url } from 'inspector';
 
 const Home: NextPage = () => {
 
   const privateKey = process.env.PRIVATE_KEY;
 
 
-  async function authorize() {}
+  async function authorize() {
+
+
+
+    // await router.push('/view')
+  }
 
   return (
     <div className={styles.container}>

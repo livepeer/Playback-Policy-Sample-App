@@ -29,7 +29,8 @@ export default function CreateStream() {
     }
   }
 
-  async function applyPlaybackPolicy() {
+  async function applyPlaybackPolicy( e: FormEvent ) {
+    e.preventDefault();
     try {
       fetch( '/api/applyPlaybackPolicy', {
         method: 'PATCH',
@@ -49,18 +50,13 @@ export default function CreateStream() {
 
   return (
     <div className={styles.main}>
-      <div className={styles.card}>
-        <h2>Create keys for Playback Policy</h2>
-        <button onClick={createKeys}>Create keys</button>
-      </div>
-
-      {/* {keyId ? ( */}
+      {keyId ? (
         <div>
           <div className={styles.card}>
             <h2>Signing Keys Info</h2>
             <p>Id: {keyId}</p>
             <p>Name: {keyName}</p>
-            <p>userId: {userId}</p>
+            <p>User Id: {userId}</p>
             <p>Created At: {createdAt}</p>
             <p>Public Key: {publicKey}</p>
             <p>Private Key: {privateKey}</p>
@@ -80,11 +76,13 @@ export default function CreateStream() {
             <br />
             <button type='submit'>Apply Playback Policy</button>
           </form>
-      </div>
-      
-       {/* ) : (
-         <></>
-       )} */}
+        </div>
+      ) : (
+        <div className={styles.card}>
+          <h2>Create keys for Playback Policy</h2>
+          <button onClick={createKeys}>Create keys</button>
+        </div>
+      )}
     </div>
   );
 }
