@@ -1,5 +1,8 @@
+import jwt, { TokenExpiredError, JwtPayload } from 'jsonwebtoken';
 import { FormEvent, useState } from 'react';
 import styles from '../styles/Home.module.css';
+
+
 
 export default function CreateStream() {
   const [ streamId, setStreamId ] = useState<string>();
@@ -10,6 +13,9 @@ export default function CreateStream() {
   const [ publicKey, setPublicKey ] = useState<string>();
   const [ privateKey, setPrivateKey ] = useState<string>();
 
+
+
+// Create signing keys for playback policy
   async function createKeys() {
     try {
       const response = await fetch('/api/createKeys', {
@@ -29,6 +35,7 @@ export default function CreateStream() {
     }
   }
 
+  // Apply playback policy to stream
   async function applyPlaybackPolicy( e: FormEvent ) {
     e.preventDefault();
     try {
@@ -46,6 +53,42 @@ export default function CreateStream() {
     } catch (error) {
       
     }
+  }
+
+
+  
+// Gate stream
+  async function gateStream() {
+
+  const expiration = Math.floor( Date.now() / 1000 ) + 1000;
+  const payload: JwtPayload = {
+    sub: streamId,
+    action: 'pull',
+    iss: 'Livepeer Studio',
+    pub: publicKey, 
+    ex: expiration,
+    video: 'none'
+  }
+
+const token = jwt.sign(payload, 'privateKey', {algorithm: 'ES256'}) 
+
+
+    try {
+      const response = await fetch(`/api/gateAPI`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify( {
+          type: 'jwt',
+          pub: token,
+          stream: streamId  
+        } )
+      } );
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      
+    }
+
   }
 
   return (
@@ -76,6 +119,10 @@ export default function CreateStream() {
             <br />
             <button type='submit'>Apply Playback Policy</button>
           </form>
+          <div className={styles.card}>
+            <h2>Gate Stream</h2>
+            <button onClick={gateStream}>Gate API</button>
+          </div>
         </div>
       ) : (
         <div className={styles.card}>
