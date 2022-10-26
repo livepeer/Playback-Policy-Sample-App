@@ -1,23 +1,8 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
-import  { useRouter } from 'next/router';
-import { ConnectKitButton } from 'connectkit';
 import styles from '../styles/Home.module.css';
-import { url } from 'inspector';
 
 const Home: NextPage = () => {
-
-  const privateKey = process.env.PRIVATE_KEY;
-
-
-  async function authorize() {
-
-
-
-  }
-
- 
 
   return (
     <div className={styles.container}>
@@ -35,7 +20,7 @@ const Home: NextPage = () => {
           <a className={styles.card} href='stream'>
             <h2>Admin Console &rarr;</h2>
           </a>
-          <a className={styles.card} onClick={authorize} href='login'>
+          <a className={styles.card} href='login'>
             <h2>Watch Streams &rarr;</h2>
           </a>
         </div>
