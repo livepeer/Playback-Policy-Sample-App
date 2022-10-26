@@ -66,7 +66,7 @@ export default function CreateStream() {
   async function gateStream( e: FormEvent ) {
     e.preventDefault();
     try {
-      const response = await fetch('/api/gateAPI', {
+         await fetch('/api/gateAPI', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -81,14 +81,19 @@ export default function CreateStream() {
 
 //Delete Key
 
-  async function deleteKey() {
+  async function deleteKey( e: FormEvent ) {
+    e.preventDefault();
     try {
-    const response = await fetch('/api/deleteKey', {
+      await fetch('/api/deleteKey', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify( {
+        getKeyId
+      } )
     });
+    setGetKeyId('')
       } catch (error) {
         console.log(error);
         
@@ -158,7 +163,7 @@ export default function CreateStream() {
         </form>
 
         {/* Delete Signing Key */}
-        <form onSubmit={gateStream} method='DELETE' className={styles.card}>
+        <form onSubmit={deleteKey} method='DELETE' className={styles.card}>
           <h2>Delete Key</h2>
           <label htmlFor='stream'>Key Id: </label>
           <br />
