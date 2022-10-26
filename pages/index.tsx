@@ -17,7 +17,7 @@ const Home: NextPage = () => {
           <a href='https://livepeer.studio'>Livepeer Studio</a> Playback Policy
         </h1>
         <div className={styles.grid}>
-          <a className={styles.card} href='stream'>
+          <a className={styles.card} href='admin'>
             <h2>Admin Console &rarr;</h2>
           </a>
           <a className={styles.card} href='login'>
