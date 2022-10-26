@@ -5,6 +5,7 @@ import styles from '../styles/Home.module.css';
 
 export default function CreateStream() {
   // Key creation
+  const [ playbackId, setPlaybackId ] = useState<string>();
   const [ streamId, setStreamId ] = useState<string>();
   const [ keyId, setKeyID ] = useState<string | null>(null);
   const [ keyName, setKeyName ] = useState<string>();
@@ -59,7 +60,21 @@ export default function CreateStream() {
 
   
 // Gate stream
-async function gateStream(){}
+  async function gateStream( e: FormEvent ) {
+    e.preventDefault();
+    try {
+      const response = await fetch('/api/gateAPI', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          streamId
+        }),
+      });
+    } catch (error) {
+     console.log(error);
+      
+    }
+}
 
   return (
     <div className={styles.main}>
@@ -82,10 +97,9 @@ async function gateStream(){}
       </div>
 
       {/* Getting keys */}
-        <a className={styles.card}  href='/signingKeys'>
-          Get Signing Keys
-        </a>
-
+      {/* <a className={styles.card} href='/signingKeys'>
+        Get Signing Keys
+      </a> */}
 
       <form onSubmit={applyPlaybackPolicy} method='PATCH' className={styles.card}>
         <label htmlFor='stream'>Stream Id: </label>
@@ -102,10 +116,21 @@ async function gateStream(){}
         <button type='submit'>Apply Playback Policy</button>
       </form>
 
-      <div className={styles.card}>
+        <form onSubmit={gateStream} method='PATCH' className={styles.card}>
         <h2>Gate Stream</h2>
-        <button onClick={gateStream}>Gate API</button>
+          <label htmlFor='stream'>Playback Id: </label>
+          <br />
+          <input
+            className='border rounded-md text-base mx-2'
+            type='text'
+            value={playbackId}
+            name='name'
+            required
+            onChange={(e) => setPlaybackId(e.target.value)}
+          />
+          <br />
+          <button type='submit'>Gate Stream</button>
+        </form>
       </div>
-    </div>
   );
 }
