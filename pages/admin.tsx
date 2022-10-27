@@ -115,10 +115,10 @@ export default function CreateStream() {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify( {
-        getKeyId
+        deleteKeyId
       } )
     });
-    setGetKeyId('')
+    setDeleteKeyId('')
       } catch (error) {
         console.log(error);
         
@@ -146,6 +146,37 @@ export default function CreateStream() {
             </div>
           ) : null}
         </div>
+
+        {/* Get key info */}
+        <form onSubmit={getKeyById} method='GET' className={styles.card}>
+          <h2>Get Key Info</h2>
+          <label htmlFor='stream'>Key Id: </label>
+          <br />
+          <input
+            className={styles.input}
+            type='search'
+            value={getKeyId}
+            name='query'
+            required
+            onChange={(e) => setGetKeyId(e.target.value)}
+          />
+          <br />
+          <button type='submit' className={styles.button}>
+            Get Key Info
+          </button>
+          {!signKeyInfo ? (
+            <></>
+          ) : (
+            <div className={styles.card}>
+              <h2> Key Info</h2>
+              <p>Id: {signKeyInfo.id}</p>
+              <p>Name: {signKeyInfo.name}</p>
+              <p>User Id: {signKeyInfo.userId}</p>
+              <p>Created At: {signKeyInfo.createdAt}</p>
+              <p>Public Key: {signKeyInfo.publicKey}</p>
+            </div>
+          )}
+        </form>
       </div>
 
       {/* Apply Playback Policy */}
@@ -187,39 +218,6 @@ export default function CreateStream() {
           </button>
         </form>
 
-        {/* Get key info by Id */}
-        <div className={styles.main2}>
-          <form onSubmit={getKeyById} method='GET' className={styles.card}>
-            <h2>Get Key Info</h2>
-            <label htmlFor='stream'>Key Id: </label>
-            <br />
-            <input
-              className={styles.input}
-              type='search'
-              value={getKeyId}
-              name='query'
-              required
-              onChange={(e) => setGetKeyId(e.target.value)}
-            />
-            <br />
-            <button type='submit' className={styles.button}>
-              Get Key Info
-            </button>
-            {!signKeyInfo ? (
-              <></>
-            ) : (
-              <div className={styles.card}>
-                <h2> Key Info</h2>
-                <p>Id: {signKeyInfo.id}</p>
-                <p>Name: {signKeyInfo.name}</p>
-                <p>User Id: {signKeyInfo.userId}</p>
-                <p>Created At: {signKeyInfo.createdAt}</p>
-                <p>Public Key: {signKeyInfo.publicKey}</p>
-              </div>
-            )}
-          </form>
-        </div>
-
         {/* Delete Signing Key */}
         <form onSubmit={deleteKey} method='DELETE' className={styles.card}>
           <h2>Delete Key</h2>
@@ -239,11 +237,11 @@ export default function CreateStream() {
           </button>
         </form>
 
+      </div>
         {/* Getting keys */}
         <a className={styles.card} href='/signingKeys'>
           Get Signing Keys
         </a>
-      </div>
     </div>
   );
 }
