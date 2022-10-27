@@ -1,9 +1,16 @@
 import { FormEvent, useState } from 'react';
 import styles from '../styles/Home.module.css';
 
-
+interface KeyInfo {
+  id: string;
+  name: string;
+  userId: string;
+  createdAt: string;
+  publicKey: string;
+}
 
 export default function CreateStream() {
+
   // Key creation
   const [ playbackId, setPlaybackId ] = useState<string>();
   const [ streamId, setStreamId ] = useState<string>();
@@ -11,7 +18,7 @@ export default function CreateStream() {
   const [ deleteKeyId, setDeleteKeyId ] = useState<string>();
   const [ getKeyId, setGetKeyId ] = useState<string>();
   const [ keyName, setKeyName ] = useState<string>();
-  const [ signKeyInfo, setSignKeyInfo ] = useState<object>();
+  const [ signKeyInfo, setSignKeyInfo ] = useState<KeyInfo>();
   const [ userId, setUserId] = useState<string>();
   const [ createdAt, setCreatedAt ] = useState<string>();
   const [ publicKey, setPublicKey ] = useState<string>();
@@ -203,11 +210,11 @@ export default function CreateStream() {
             ) : (
               <div className={styles.card}>
                 <h2> Key Info</h2>
-                <p>Id: {signKeyInfo?.id}</p>
-                <p>Name: {signKeyInfo?.name}</p>
-                <p>User Id: {signKeyInfo?.userId}</p>
-                <p>Created At: {signKeyInfo?.createdAt}</p>
-                <p>Public Key: {signKeyInfo?.publicKey}</p>
+                <p>Id: {signKeyInfo.id}</p>
+                <p>Name: {signKeyInfo.name}</p>
+                <p>User Id: {signKeyInfo.userId}</p>
+                <p>Created At: {signKeyInfo.createdAt}</p>
+                <p>Public Key: {signKeyInfo.publicKey}</p>
               </div>
             )}
           </form>
