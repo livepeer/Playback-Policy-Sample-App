@@ -10,24 +10,25 @@ interface KeyInfo {
 }
 
 export default function CreateStream() {
-
   // Key creation
-  const [ playbackId, setPlaybackId ] = useState<string>();
-  const [ streamId, setStreamId ] = useState<string>();
-  const [ keyId, setKeyID ] = useState<string | null>(null);
-  const [ deleteKeyId, setDeleteKeyId ] = useState<string>();
-  const [ getKeyId, setGetKeyId ] = useState<string>();
-  const [ keyName, setKeyName ] = useState<string>();
-  const [ signKeyInfo, setSignKeyInfo ] = useState<KeyInfo>();
-  const [ userId, setUserId] = useState<string>();
-  const [ createdAt, setCreatedAt ] = useState<string>();
-  const [ publicKey, setPublicKey ] = useState<string>();
-  const [ privateKey, setPrivateKey ] = useState<string>();
-  const [ disabledCreate, setDisabledCreate ] = useState<boolean>( false );
+  const [playbackId, setPlaybackId] = useState<string>();
+  const [streamId, setStreamId] = useState<string>();
+  const [keyId, setKeyID] = useState<string | null>(null);
+  const [deleteKeyId, setDeleteKeyId] = useState<string>();
+  const [updateKeyId, setUpdateKeyId] = useState<string>();
+  const [updateKeyName, setUpdateKeyName] = useState<string>();
+  const [getKeyId, setGetKeyId] = useState<string>();
+  const [keyName, setKeyName] = useState<string>();
+  const [signKeyInfo, setSignKeyInfo] = useState<KeyInfo>();
+  const [userId, setUserId] = useState<string>();
+  const [createdAt, setCreatedAt] = useState<string>();
+  const [publicKey, setPublicKey] = useState<string>();
+  const [privateKey, setPrivateKey] = useState<string>();
+  const [disabledCreate, setDisabledCreate] = useState<boolean>(false);
+  const [selectDisableKey, setSelectDisableKey] = useState<string>();
+  const [disableKey, setDisableKey] = useState<boolean>(false);
 
-
-
-// Create signing keys for playback policy
+  // Create signing keys for playback policy
   async function createKeys() {
     try {
       const response = await fetch('/api/createKeys', {
@@ -35,96 +36,95 @@ export default function CreateStream() {
         headers: { 'Content-Type': 'application/json' },
       });
       const data = await response.json();
-      
-      setKeyID(data.id)
-      setKeyName(data.name)
-      setUserId(data.userId)
-      setCreatedAt(data.createdAt)
-      setPublicKey(data.publicKey)
-      setPrivateKey( data.privateKey )
-      setDisabledCreate(true)
-    } catch ( error ) {
+
+      setKeyID(data.id);
+      setKeyName(data.name);
+      setUserId(data.userId);
+      setCreatedAt(data.createdAt);
+      setPublicKey(data.publicKey);
+      setPrivateKey(data.privateKey);
+      setDisabledCreate(true);
+    } catch (error) {
       console.log(error);
-      
     }
   }
 
   // Apply playback policy to stream
-  async function applyPlaybackPolicy( e: FormEvent ) {
+  async function applyPlaybackPolicy(e: FormEvent) {
     e.preventDefault();
     try {
-      fetch( '/api/applyPlaybackPolicy', {
+      fetch('/api/applyPlaybackPolicy', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          streamId,
+          playbackPolicy: {
+            type: 'jwt',
+          },
+        }),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+ 
+  // Get key by Id
+  async function getKeyById(e: FormEvent) {
+    e.preventDefault();
+    try {
+      const response = await fetch(`/api/keyInfo/${getKeyId}`, {
+        method: 'GET',
+      });
+      const data = await response.json();
+      setSignKeyInfo(data);
+      console.log(data);
+    } catch (error) {}
+  }
+
+  // Update key
+  async function updateKey(e: FormEvent) {
+    e.preventDefault();
+    try {
+      if (selectDisableKey === 'true') {
+        setDisableKey(true);
+      }
+      if(selectDisableKey === 'false'){
+        setDisableKey(false);
+      }
+      await fetch(`/api/updateKey`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify( {
-          streamId,
-          playbackPolicy: {
-            'type': 'jwt'
-          }
-        } )
-      }
-      )
-    } catch (error) {
-      console.log(error);
-      
-    }
-  }
-
-  
-// Gate stream
-  async function gateStream( e: FormEvent ) {
-    e.preventDefault();
-    try {
-         await fetch('/api/gateAPI', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          streamId
+          updateKeyId,
+          disable: disableKey,
+          name: updateKeyName
         }),
       } );
     } catch (error) {
-     console.log(error);
-      
+      console.log(error);
     }
-}
+  }
 
-// Get key by Id
-  async function getKeyById( e: FormEvent ) {
+  //Delete Key
+  async function deleteKey(e: FormEvent) {
     e.preventDefault();
     try {
-      const response = await fetch( `/api/keyInfo/${getKeyId}`, {
-        method: 'GET'
-      } )
-      const data = await response.json();
-      setSignKeyInfo( data )
-      console.log(data);
-      
+      await fetch(`/api/deleteKey`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          deleteKeyId,
+        }),
+      });
+      setDeleteKeyId('');
     } catch (error) {
-      
+      console.log(error);
     }
   }
-  
-//Delete Key
 
-  async function deleteKey( e: FormEvent ) {
-    e.preventDefault();
-    try {
-      await fetch('/api/deleteKey', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify( {
-        deleteKeyId
-      } )
-    });
-    setDeleteKeyId('')
-      } catch (error) {
-        console.log(error);
-        
-      }
-  }
-  
   return (
     <div className={styles.main}>
       <div className={styles.main2}>
@@ -199,22 +199,44 @@ export default function CreateStream() {
           </button>
         </form>
 
-        {/* Gate Stream */}
-        <form onSubmit={gateStream} method='PATCH' className={styles.card}>
-          <h2>Gate Stream</h2>
-          <label htmlFor='stream'>Playback Id: </label>
+
+        {/* Update signing key */}
+        <form onSubmit={updateKey} method='PATCH' className={styles.card}>
+          <h2>Update Signing Key</h2>
+          <label htmlFor='stream'>Key Id: </label>
           <br />
           <input
             className={styles.input}
             type='text'
-            value={playbackId}
-            name='Playback Id'
+            value={updateKeyId}
+            name='name'
             required
-            onChange={(e) => setPlaybackId(e.target.value)}
+            onChange={(e) => setUpdateKeyId(e.target.value)}
           />
           <br />
+          <label htmlFor='stream'>Update Key Name: </label>
+          <br />
+          <input
+            className={styles.input}
+            type='text'
+            value={updateKeyName}
+            name='name'
+            onChange={(e) => setUpdateKeyName(e.target.value)}
+          />
+          <br />
+          <label htmlFor='disabledKey'>Disable Key</label>
+          <br />
+          <select name='disableKey' onChange={(e) => setSelectDisableKey(e.target.value)}>
+            <option disabled selected>
+              Select an option
+            </option>
+            <option value={'true'}>Disable Key</option>
+            <option value={'false'}>Enable Key</option>
+          </select>
+
+          <br />
           <button type='submit' className={styles.button}>
-            Gate Stream
+            Update
           </button>
         </form>
 
@@ -236,12 +258,11 @@ export default function CreateStream() {
             Delete
           </button>
         </form>
-
       </div>
-        {/* Getting keys */}
-        <a className={styles.card} href='/signingKeys'>
-          Get Signing Keys
-        </a>
+      {/* Getting keys */}
+      <a className={styles.card} href='/signingKeys'>
+        Get Signing Keys
+      </a>
     </div>
   );
 }

@@ -2,9 +2,25 @@ import { ConnectKitButton } from 'connectkit';
 import { Player } from '@livepeer/react';
 import { useAccount } from 'wagmi';
 import styles from '../styles/Home.module.css';
+import jwt, { JwtPayload, Secret} from 'jsonwebtoken'
 
-
+  
+  
+  
 export default function Login() {
+  
+const expiration = Math.floor(Date.now() / 1000) + 1000;
+const payload: JwtPayload = {
+  sub: playbackId,
+  action: 'pull',
+  iss: 'Livepeer Studio',
+  pub: publicKey,
+  exp: expiration,
+  video: 'none',
+};
+
+const token = jwt.sign(payload, process.env.PRIVATE_KEY as Secret, { algorithm: 'ES256' });
+
 
   const { address, isConnected} = useAccount();
 

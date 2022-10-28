@@ -1,4 +1,4 @@
-import React from 'react';
+import {useState} from 'react';
 import styles from '../styles/Home.module.css';
 
 interface SigningKeysDetails {
@@ -10,39 +10,42 @@ interface SigningKeysDetails {
 }
 
 
+export default function SigningKeys() {
 
-export async function getServerSideProps() {
-  const res = await fetch(`https://livepeer.monster/api/access-control/signing-key`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${process.env.STAGING_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-  });
-  const data: Array<SigningKeysDetails> = await res.json();
+  const [ keyInfo, setKeyInfo ] = useState();
 
-  console.log(data);
-  return {
-    props: {
-       data,
-    },
-    
-  };
-}
+  async function gettingKeyInfo() {
+    try {
+      const response = await fetch( `/api/keyInfos`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      } );
+      const data = await response.json();
+      console.log(data);
 
-export default function signingKeys([...data]: Array<SigningKeysDetails>) {
+      
+      setKeyInfo(data)
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
   return (
       <main className={styles.main}>
-        <h1 className={styles.title}> Signing Keys</h1>
-        <ul className={styles.grid}>
-          {data.map((keyInfo) => {
-            <div className={styles.card} key={keyInfo.id}>
+      <h1 className={ styles.title }> Signing Keys</h1>
+      <button onClick={gettingKeyInfo}>Get List</button>
+      <ul className={ styles.grid }>
+          {keyInfo.map<SigningKeysDetails>((item ) => {
+            <div className={styles.card} key={item.id}>
               <h2>Get Keys Info</h2>
-              <p>Key Id:{keyInfo.id} </p>
-              <p>Key Name:{keyInfo.name} </p>
-              <p>Public Key: {keyInfo.publicKey}</p>
-              <p>Created At: {keyInfo.createdAt}</p>
-              <p>User Id: {keyInfo.userId}</p>
+              <p>Key Id:{item.id} </p>
+              <p>Key Name:{item.name} </p>
+              <p>Public Key: {item.publicKey}</p>
+              <p>Created At: {item.createdAt}</p>
+              <p>User Id: {item.userId}</p>
             </div>;
           })}
         </ul>
