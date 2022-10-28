@@ -1,5 +1,4 @@
 import { ConnectKitButton } from 'connectkit';
-import { useEffect, useState } from 'react';
 import { Player } from '@livepeer/react';
 import { useAccount, useBalance } from 'wagmi';
 import styles from '../styles/Home.module.css';
@@ -19,24 +18,22 @@ export default function Login() {
   // Creating JWT
 
   const playbackId = 'b5e7kxt3zi69o4x8';
-  const expiration = Math.floor(Date.now() / 1000) + 1000;
+  const expiration = Math.floor(Date.now() / 1000) * 1000;
   const payload: JwtPayload = {
     sub: playbackId,
     action: 'pull',
     iss: 'Livepeer Studio',
     pub: process.env.NEXT_PUBLIC_PUBLIC_KEY,
     exp: expiration,
-    // video: 'none',
   };
-
   
   const token = jwt.sign(payload, process.env.NEXT_PUBLIC_PRIVATE_KEY as Secret, {
     algorithm: 'ES256',
   });
 
-  console.log(token);
+  // console.log(token);
   
-  // const playbackURL = `https://livepeercdn.com/hls/${playbackId}/index.m3u8/${token}`;
+  const playbackURL = `https://livepeercdn.com/hls/${playbackId}/index.m3u8/${token}`;
 
   return (
     <div className={styles.container}>
@@ -45,8 +42,8 @@ export default function Login() {
         <ConnectKitButton />
         {isConnected && Number(data?.formatted) > minimumEth && (
           <div className={styles.player}>
-            {/* <p>Playback URL: {playbackURL}</p> */}
             <Player playbackId={playbackId} showPipButton loop autoPlay muted />
+            <p>Playback URL: {playbackURL}</p>
           </div>
         )}
       </main>
