@@ -4,14 +4,15 @@ import { Player } from '@livepeer/react';
 import { useAccount, useBalance, useNetwork, useSignMessage, useSigner } from 'wagmi';
 import styles from '../styles/Home.module.css';
 import { SiweMessage } from 'siwe';
-import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
+
 
 export default function Login() {
   const { chain } = useNetwork();
   const { signMessageAsync } = useSignMessage();
   const { data: signer } = useSigner();
   const [verifyMessage, setVerifiedMessage] = useState<string>();
-  const [verifySignature, setVerifiedSignature] = useState<string>();
+  const [ verifySignature, setVerifiedSignature ] = useState<string>();
+  const playbackId = 'b5e7kxt3zi69o4x8';
 
   const signIn = async () => {
     const nonceRes = await fetch('/api/nonce');
@@ -57,21 +58,6 @@ export default function Login() {
   const { data } = useBalance({
     addressOrName: address, //Getting wallet address with useAccount()
     chainId: 5, //Goerli testnet});
-  });
-
-  // Creating JWT
-  const playbackId = 'b5e7kxt3zi69o4x8';
-  const expiration = Math.floor(Date.now() / 1000) * 1000;
-  const payload: JwtPayload = {
-    sub: playbackId,
-    action: 'pull',
-    iss: 'Livepeer Studio',
-    pub: process.env.NEXT_PUBLIC_PUBLIC_KEY,
-    exp: expiration,
-  };
-
-  const token = jwt.sign(payload, process.env.NEXT_PUBLIC_PRIVATE_KEY as Secret, {
-    algorithm: 'ES256',
   });
 
   const playbackURL = `https://livepeercdn.com/hls/${playbackId}/index.m3u8/${token}`;
