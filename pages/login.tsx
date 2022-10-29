@@ -16,7 +16,6 @@ export default function Login() {
   });
 
   // Creating JWT
-
   const playbackId = 'b5e7kxt3zi69o4x8';
   const expiration = Math.floor(Date.now() / 1000) * 1000;
   const payload: JwtPayload = {
