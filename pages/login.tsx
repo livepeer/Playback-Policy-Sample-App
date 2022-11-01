@@ -72,6 +72,7 @@ export default function Login() {
       const decodedToken = jwt.decode( token ) as {[key: string]: string}
       setPlaybackId( decodedToken.sub )
       console.log(decodedToken.sub);
+      console.log(decodedToken.custom);
       
     }
   };
@@ -104,7 +105,7 @@ export default function Login() {
 
         {verifySignature ? (
           <div className={styles.player}>
-            <Player src={`https://livepeercdn.monster/hls/${playbackId}/index.m3u8`} showPipButton loop autoPlay muted />
+            <Player src={`https://livepeercdn.monster/hls/${playbackId}/index.m3u8/${token}`} showPipButton loop autoPlay muted />
           </div>
         ) : (
           <></>
