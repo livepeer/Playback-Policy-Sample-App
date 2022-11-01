@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { FormEvent, useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
 
@@ -220,9 +221,9 @@ export default function CreateStream() {
         </form>
       </div>
       {/* Getting keys */}
-      <a className={styles.card} href='/signingKeys'>
+      <Link className={styles.card} href='/signingKeys'>
         Get Signing Keys
-      </a>
+      </Link>
     </div>
   );
 }
