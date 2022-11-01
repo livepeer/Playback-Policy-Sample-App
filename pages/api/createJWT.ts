@@ -4,13 +4,16 @@ import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 
-  const { playbackId } = req.body;
+  const { playbackId, verifiedSignature } = req.body;
 
   // Creating JWT
   const expiration = Math.floor(Date.now() / 1000) * 1000;
   const payload: JwtPayload = {
     sub: playbackId,
     action: 'pull',
+    custom: {
+      walletAddress: verifiedSignature
+    },
     iss: 'Livepeer Studio',
     pub: process.env.PUBLIC_KEY,
     exp: expiration,

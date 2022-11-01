@@ -16,12 +16,15 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>
           <a href='https://livepeer.studio'>Livepeer Studio</a> Playback Policy
         </h1>
-          <a className={styles.card} href='admin'>
-            <h2>Admin Console </h2>
-          </a>
-          <a className={styles.card} href='login'>
-            <h2>Watch Streams </h2>
-          </a>
+        <a className={styles.card} href='admin'>
+          <h2> Admin Console</h2>
+        </a>
+        <a className={styles.card} href='dashboard'>
+          <h2> Dashboard </h2>
+        </a>
+        <a className={styles.card} href='login'>
+          <h2>Watch Streams </h2>
+        </a>
       </main>
     </div>
   );
