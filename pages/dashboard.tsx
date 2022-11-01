@@ -221,9 +221,9 @@ export default function CreateStream() {
         </form>
       </div>
       {/* Getting keys */}
-      <Link className={styles.card} href='/signingKeys'>
+      {/* <Link className={styles.card} href='/signingKeys'>
         Get Signing Keys
-      </Link>
+      </Link> */}
     </div>
   );
 }
