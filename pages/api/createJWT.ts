@@ -7,7 +7,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { playbackId, verifiedSignature } = req.body;
 
   // Creating JWT
-  const expiration = Math.floor(Date.now() / 1000) * 1000;
+  // Expires in 1 hour
+  const expiration = Math.floor(Date.now() / 1000) + (60 * 60);
   const payload: JwtPayload = {
     sub: playbackId,
     action: 'pull',
