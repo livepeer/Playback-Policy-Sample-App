@@ -12,7 +12,8 @@ export default function Login() {
   const { data: signer } = useSigner();
   const [verifyMessage, setVerifiedMessage] = useState<string>();
   const [ verifySignature, setVerifiedSignature ] = useState<string>();
-  const playbackId = 'b5e7kxt3zi69o4x8';
+  const [ token, setToken ] = useState<string>();
+  const [playbackId, setPlaybackId] = useState<string>('b5e7kxt3zi69o4x8');
 
   const signIn = async () => {
     const nonceRes = await fetch('/api/nonce');
@@ -48,6 +49,21 @@ export default function Login() {
       setVerifiedMessage('Not Verified');
     }
 
+    // Generate JWT
+      const createJWTRes = await fetch('/api/createJWT', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          playbackId,
+        }),
+      });
+    const {token }= await createJWTRes.json();
+    console.log(token);
+    
+      setToken(token);
+
   };
 
   // Set minimum amount of Eth in wallet to view(ACL)
@@ -58,8 +74,9 @@ export default function Login() {
   const { data } = useBalance({
     addressOrName: address, //Getting wallet address with useAccount()
     chainId: 5, //Goerli testnet});
-  });
-
+  } );
+  
+  
   const playbackURL = `https://livepeercdn.com/hls/${playbackId}/index.m3u8/${token}`;
 
   return (
@@ -70,18 +87,27 @@ export default function Login() {
         {isConnected && Number(data?.formatted) > minimumEth ? (
           <div>
             <button onClick={signIn}>Sign in with Ethereum</button>
-            <p>Signature: {verifySignature}</p>
-            <p>Message: {verifyMessage}</p>
-          </div>
-        ) : signer ? (
-          <div className={styles.player}>
-            <Player playbackId={playbackId} showPipButton loop autoPlay muted />
-            <p>Playback URL: {playbackURL}</p>
           </div>
         ) : (
           <></>
         )}
+
+        { verifySignature ?  (
+            <div className={styles.card}>
+              <p>Signature: {verifySignature}</p>
+              <p>Message: {verifyMessage}</p>
+              <p>Token: {token}</p>
+            </div> 
+        )}
+
+       
+
+        {/* verifySignature ? (
+          <div className={styles.player}>
+            <Player playbackId={playbackId} showPipButton loop autoPlay muted />
+            <p>Playback URL: {playbackURL}</p>
+          </div> */}
       </main>
-    </div>
+      </div>
   );
 }
