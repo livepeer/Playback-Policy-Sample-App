@@ -3,7 +3,7 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
   try {
     // TODO: Change to livepeer.studio when in production
     const response = await fetch(
-      `https://livepeer.monster/api/access-control/signing-key/${req.body.deleteKeyId}`,
+      `https://livepeer.studio/api/access-control/signing-key/${req.body.deleteKeyId}`,
       {
         method: 'DELETE',
         headers: {

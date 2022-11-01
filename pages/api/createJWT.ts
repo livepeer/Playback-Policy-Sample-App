@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     sub: playbackId,
     action: 'pull',
     custom: {
-      walletAddress: verifiedSignature
+      'walletAddress': verifiedSignature
     },
     iss: 'Livepeer Studio',
     pub: process.env.PUBLIC_KEY,

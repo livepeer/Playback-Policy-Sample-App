@@ -3,7 +3,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { streamId } = req.body;
   try {
     // TODO: Change to livepeer.studio when in production
-    const response = await fetch(`https://livepeer.monster/api/stream/${streamId}`, {
+    const response = await fetch(`https://livepeer.studio/api/stream/${streamId}`, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${process.env.STAGING_API_KEY}`,

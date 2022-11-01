@@ -15,7 +15,7 @@ export default function Login() {
   const [ token, setToken ] = useState<string>();
   const [ signed, setSigned ] = useState<boolean>();
   const [disableButton, setDisablebutton] = useState<boolean>(false)
-  const [playbackId, setPlaybackId] = useState<string>('b5e7kxt3zi69o4x8');
+  const [playbackId, setPlaybackId] = useState<string>('90a9qgzn4t8ur080');
 
   const signIn = async () => {
     const nonceRes = await fetch('/api/nonce');
@@ -77,7 +77,13 @@ export default function Login() {
     }
   };
 
-  
+  // Logout of Siwe
+   async function logOut() {
+     await fetch( '/api/logout', {
+      method: 'POST'
+     } )
+     setVerifiedSignature( '' );
+  }
 
 
   // Set minimum amount of Eth in wallet to view(ACL)
@@ -100,12 +106,13 @@ export default function Login() {
         {isConnected && Number(data?.formatted) > minimumEth && (
           <div>
             <button onClick={signIn} disabled={disableButton}>Sign in with Ethereum</button>
+            <button onClick={logOut} >Log Out</button>
           </div>
         )}
 
         {verifySignature ? (
           <div className={styles.player}>
-            <Player src={`https://livepeercdn.monster/hls/${playbackId}/index.m3u8/${token}`} showPipButton loop autoPlay muted />
+            <Player src={`https://livepeercdn.studio/hls/${playbackId}/index.m3u8/${token}`} showPipButton loop autoPlay muted />
           </div>
         ) : (
           <></>

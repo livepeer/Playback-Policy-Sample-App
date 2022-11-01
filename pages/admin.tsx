@@ -35,7 +35,8 @@ export default function CreateStream() {
       setUserId(data.userId);
       setCreatedAt(data.createdAt);
       setPublicKey(data.publicKey);
-      setPrivateKey(window.atob(data.privateKey));
+      setPrivateKey(data.privateKey);
+      // setPrivateKey(window.btoa(data.privateKey));
       setDisabledCreate(true);
     } catch (error) {
       console.log(error);
