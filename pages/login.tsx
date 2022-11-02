@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
-// import { ConnectKitButton } from 'connectkit';
 import { Player } from '@livepeer/react';
 import jwt from 'jsonwebtoken';
-import { useAccount, useBalance, useNetwork, useSignMessage, useSigner, useConnect, useDisconnect } from 'wagmi';
+import { useAccount, useBalance, useNetwork, useSignMessage, useConnect, useDisconnect } from 'wagmi';
 import { SiweMessage } from 'siwe';
 import styles from '../styles/Home.module.css';
 
 export default function Login() {
   const { chain } = useNetwork();
   const { signMessageAsync, isSuccess } = useSignMessage();
-  const { data: signer } = useSigner();
   const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
 
   const [verifySignature, setVerifiedSignature] = useState<string>();
@@ -70,7 +68,6 @@ export default function Login() {
     if (token) {
       const decodedToken = jwt.decode(token) as { [key: string]: string };
       setPlaybackId(decodedToken.sub);
-      console.log(decodedToken.sub);
     }
   };
 
@@ -106,34 +103,44 @@ export default function Login() {
       <main className={styles.main}>
         <h1 className={styles.title}>Connect Wallet to view streams</h1>
         <div className={styles.card}>
-          {/* <ConnectKitButton /> */}
-
+          {/* Getting wallets */}
           <div>
-            {connectors.map((connector) => (
-              <button
-                className={styles.button}
-                disabled={!connector.ready}
-                key={connector.id}
-                onClick={() => connect({ connector })}
-              >
-                {connector.name}
-                {!connector.ready && ' (unsupported)'}
-                {isLoading && connector.id === pendingConnector?.id && ' (connecting)'}
-              </button>
-            ))}
-            {error && <div>{error.message}</div>}
+            <div>
+              {connectors.map((connector) => (
+                <button
+                  className={styles.button}
+                  disabled={!connector.ready}
+                  key={connector.id}
+                  onClick={() => connect({ connector })}
+                >
+                  {connector.name}
+                  {!connector.ready && ' (unsupported)'}
+                  {isLoading && connector.id === pendingConnector?.id && ' (connecting)'}
+                </button>
+              ))}
+              {error && <div>{error.message}</div>}
+              {isConnected ? (
+                <button className={styles.button} onClick={() => disconnect()}>
+                  Disconnect
+                </button>
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
-          <button className={styles.button} onClick={() => disconnect()}>
-            Disconnect
-          </button>
+
           {isConnected && Number(data?.formatted) > minimumEth && (
             <div>
               <button onClick={signIn} disabled={disableButton} className={styles.button}>
                 Sign in with Ethereum
               </button>
-              <button onClick={logOut} className={styles.button}>
-                Sign Out
-              </button>
+              {verifySignature ? (
+                <button onClick={logOut} className={styles.button}>
+                  Sign Out
+                </button>
+              ) : (
+                <></>
+              )}
             </div>
           )}
           {verifySignature ? <p>Signature: {verifySignature}</p> : <></>}
