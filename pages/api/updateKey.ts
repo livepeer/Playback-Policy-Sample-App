@@ -3,17 +3,16 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 export default async function handler( req: NextApiRequest, res: NextApiResponse ) {
   const { disableKey, updateKeyName, updateKeyId } = req.body;
   try {
-    // TODO: Change to livepeer.studio when in production
     const response = await fetch(
       `https://livepeer.studio/api/access-control/signing-key/${updateKeyId}`,
       {
         method: 'PATCH',
         headers: {
-          Authorization: `Bearer ${process.env.STAGING_API_KEY}`,
+          Authorization: `Bearer ${process.env.API_KEY}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify( {
-          disable:disableKey,
+          // disable:disableKey,
           name:updateKeyName
         })
       }
