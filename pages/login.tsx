@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react';
-import { ConnectKitButton } from 'connectkit';
+// import { ConnectKitButton } from 'connectkit';
 import { Player } from '@livepeer/react';
 import jwt from 'jsonwebtoken';
-import { useAccount, useBalance, useNetwork, useSignMessage, useSigner } from 'wagmi';
+import { useAccount, useBalance, useNetwork, useSignMessage, useSigner, useConnect, useDisconnect } from 'wagmi';
 import { SiweMessage } from 'siwe';
 import styles from '../styles/Home.module.css';
 
 export default function Login() {
   const { chain } = useNetwork();
-  const { signMessageAsync , isSuccess} = useSignMessage();
+  const { signMessageAsync, isSuccess } = useSignMessage();
   const { data: signer } = useSigner();
+  const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
 
   const [verifySignature, setVerifiedSignature] = useState<string>();
-  const [ token, setToken ] = useState<string>();
-  const [disableButton, setDisablebutton] = useState<boolean>(false)
+  const [token, setToken] = useState<string>();
+  const [disableButton, setDisablebutton] = useState<boolean>(false);
   const [playbackId, setPlaybackId] = useState<string>('b0aakwxhj9xpi1qf');
 
   const signIn = async () => {
@@ -47,7 +48,7 @@ export default function Login() {
     // console.log(signature);
 
     // Generate JWT
-    const createJWTRes = await fetch( '/api/createJWT', {
+    const createJWTRes = await fetch('/api/createJWT', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -56,63 +57,82 @@ export default function Login() {
         playbackId,
         address,
       }),
-    } );
+    });
     const { token } = await createJWTRes.json();
     // console.log(token);
 
-     if (verifyRes.ok) {
-       setVerifiedSignature(signature);
-     }
+    if (verifyRes.ok) {
+      setVerifiedSignature(signature);
+    }
     setToken(token);
-    setDisablebutton( true );
+    setDisablebutton(true);
     // Decode token to get playbackId of stream
-    if ( token ) {
-      const decodedToken = jwt.decode( token ) as {[key: string]: string}
-      setPlaybackId( decodedToken.sub )
+    if (token) {
+      const decodedToken = jwt.decode(token) as { [key: string]: string };
+      setPlaybackId(decodedToken.sub);
       console.log(decodedToken.sub);
-      
     }
   };
 
   // Logout of Siwe
-   async function logOut() {
-     await fetch( '/api/logout', {
-      method: 'POST'
-     } )
-     setVerifiedSignature( '' );
-     setDisablebutton(false)
+  async function logOut() {
+    await fetch('/api/logout', {
+      method: 'POST',
+    });
+    setVerifiedSignature('');
+    setDisablebutton(false);
   }
+
+  // Using Wagmi to get wallet information
+  const { address, isConnected, isDisconnected } = useAccount();
+  const { disconnect } = useDisconnect();
+  const { data } = useBalance({
+    addressOrName: address, //Getting wallet address with useAccount()
+    chainId: 5, //Goerli testnet});
+    formatUnits: 'ether' //in ethers
+  });
 
   // Set minimum amount of Eth in wallet to view(ACL)
   const minimumEth = 0.001;
 
-  // Using Wagmi to get wallet information
-  const { address, isConnected, isDisconnected } = useAccount();
-  const { data } = useBalance({
-    addressOrName: address, //Getting wallet address with useAccount()
-    chainId: 5, //Goerli testnet});
-  });
-
-  useEffect( () => {
-    if ( isDisconnected ) {
-      setDisablebutton( false )
+  useEffect(() => {
+    if (isDisconnected) {
+      setDisablebutton(false);
     }
-    }, [isDisconnected])
-
+  }, [isDisconnected]);
 
   return (
     <div className={styles.container}>
       <main className={styles.main}>
         <h1 className={styles.title}>Connect Wallet to view streams</h1>
         <div className={styles.card}>
-          <ConnectKitButton />
+          {/* <ConnectKitButton /> */}
+
+          <div>
+            {connectors.map((connector) => (
+              <button
+                className={styles.button}
+                disabled={!connector.ready}
+                key={connector.id}
+                onClick={() => connect({ connector })}
+              >
+                {connector.name}
+                {!connector.ready && ' (unsupported)'}
+                {isLoading && connector.id === pendingConnector?.id && ' (connecting)'}
+              </button>
+            ))}
+            {error && <div>{error.message}</div>}
+          </div>
+          <button className={styles.button} onClick={() => disconnect()}>
+            Disconnect
+          </button>
           {isConnected && Number(data?.formatted) > minimumEth && (
             <div>
               <button onClick={signIn} disabled={disableButton} className={styles.button}>
                 Sign in with Ethereum
               </button>
               <button onClick={logOut} className={styles.button}>
-                Log Out
+                Sign Out
               </button>
             </div>
           )}
