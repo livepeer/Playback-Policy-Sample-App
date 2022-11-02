@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ConnectKitButton } from 'connectkit';
 import { Player } from '@livepeer/react';
 import jwt from 'jsonwebtoken';
@@ -13,9 +13,8 @@ export default function Login() {
 
   const [verifySignature, setVerifiedSignature] = useState<string>();
   const [ token, setToken ] = useState<string>();
-  const [ signed, setSigned ] = useState<boolean>();
   const [disableButton, setDisablebutton] = useState<boolean>(false)
-  const [playbackId, setPlaybackId] = useState<string>('90a9qgzn4t8ur080');
+  const [playbackId, setPlaybackId] = useState<string>('b0aakwxhj9xpi1qf');
 
   const signIn = async () => {
     const nonceRes = await fetch('/api/nonce');
@@ -45,34 +44,32 @@ export default function Login() {
         signature,
       }),
     });
-    console.log(signature);
-
-    if (verifyRes.ok) {
-      setVerifiedSignature(signature);
-    }
+    // console.log(signature);
 
     // Generate JWT
-    const createJWTRes = await fetch('/api/createJWT', {
+    const createJWTRes = await fetch( '/api/createJWT', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         playbackId,
-        verifySignature,
+        address,
       }),
-    });
+    } );
     const { token } = await createJWTRes.json();
-    console.log(token);
+    // console.log(token);
 
+     if (verifyRes.ok) {
+       setVerifiedSignature(signature);
+     }
     setToken(token);
     setDisablebutton( true );
-    // Decode token
+    // Decode token to get playbackId of stream
     if ( token ) {
       const decodedToken = jwt.decode( token ) as {[key: string]: string}
       setPlaybackId( decodedToken.sub )
       console.log(decodedToken.sub);
-      console.log(decodedToken.custom);
       
     }
   };
@@ -83,36 +80,53 @@ export default function Login() {
       method: 'POST'
      } )
      setVerifiedSignature( '' );
+     setDisablebutton(false)
   }
-
 
   // Set minimum amount of Eth in wallet to view(ACL)
   const minimumEth = 0.001;
 
   // Using Wagmi to get wallet information
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, isDisconnected } = useAccount();
   const { data } = useBalance({
     addressOrName: address, //Getting wallet address with useAccount()
     chainId: 5, //Goerli testnet});
   });
 
+  useEffect( () => {
+    if ( isDisconnected ) {
+      setDisablebutton( false )
+    }
+    }, [isDisconnected])
 
 
   return (
     <div className={styles.container}>
       <main className={styles.main}>
         <h1 className={styles.title}>Connect Wallet to view streams</h1>
-        <ConnectKitButton />
-        {isConnected && Number(data?.formatted) > minimumEth && (
-          <div>
-            <button onClick={signIn} disabled={disableButton}>Sign in with Ethereum</button>
-            <button onClick={logOut} >Log Out</button>
-          </div>
-        )}
-
-        {verifySignature ? (
+        <div className={styles.card}>
+          <ConnectKitButton />
+          {isConnected && Number(data?.formatted) > minimumEth && (
+            <div>
+              <button onClick={signIn} disabled={disableButton} className={styles.button}>
+                Sign in with Ethereum
+              </button>
+              <button onClick={logOut} className={styles.button}>
+                Log Out
+              </button>
+            </div>
+          )}
+          {verifySignature ? <p>Signature: {verifySignature}</p> : <></>}
+        </div>
+        {verifySignature && isConnected ? (
           <div className={styles.player}>
-            <Player src={`https://livepeercdn.studio/hls/${playbackId}/index.m3u8/${token}`} showPipButton loop autoPlay muted />
+            <Player
+              src={`https://livepeercdn.com/hls/${playbackId}/index.m3u8?jwt=${token}`}
+              showPipButton
+              loop
+              autoPlay
+              muted
+            />
           </div>
         ) : (
           <></>
