@@ -1,8 +1,10 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
+import Layout from '../components/Layout';
 import { LivepeerConfig, createReactClient, studioProvider } from '@livepeer/react';
 import { ConnectKitProvider, getDefaultClient } from 'connectkit';
 import { WagmiConfig, chain, createClient } from 'wagmi';
+
 
 function MyApp( { Component, pageProps }: AppProps ) {
   
@@ -23,7 +25,9 @@ function MyApp( { Component, pageProps }: AppProps ) {
       <WagmiConfig client={wagmiClient}>
         <ConnectKitProvider>
           <LivepeerConfig client={client}>
-            <Component {...pageProps} />
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
           </LivepeerConfig>
         </ConnectKitProvider>
       </WagmiConfig>
