@@ -5,7 +5,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const response = await fetch(`https://livepeer.studio/api/access-control/signing-key`, {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${process.env.STAGING_API_KEY}`,
+        Authorization: `Bearer ${process.env.API_KEY}`,
         'Content-Type': 'application/json',
       },
     });
