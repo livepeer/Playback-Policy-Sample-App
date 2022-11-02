@@ -2,7 +2,6 @@ import '../styles/globals.css'
 import type { AppProps } from 'next/app'
 import Layout from '../components/Layout';
 import { LivepeerConfig, createReactClient, studioProvider } from '@livepeer/react';
-// import { ConnectKitProvider, getDefaultClient } from 'connectkit';
 import { WagmiConfig, defaultChains, createClient, configureChains } from 'wagmi';
 
 import { publicProvider } from 'wagmi/providers/public';
@@ -13,7 +12,6 @@ import { InjectedConnector } from 'wagmi/connectors/injected';
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
 import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 
-// infuraId: process.env.NEXT_PUBLIC_INFURA_API_KEY,
 
 const { chains, provider, webSocketProvider } = configureChains(defaultChains, [
   infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY }),
@@ -59,13 +57,11 @@ function MyApp( { Component, pageProps }: AppProps ) {
   return (
     <>
       <WagmiConfig client={wagmiClient}>
-        {/* <ConnectKitProvider> */}
           <LivepeerConfig client={client}>
             <Layout>
               <Component {...pageProps} />
             </Layout>
           </LivepeerConfig>
-        {/* </ConnectKitProvider> */}
       </WagmiConfig>
     </>
   );

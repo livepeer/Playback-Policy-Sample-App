@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // TODO: Change to livepeer.studio when in production
     const response = await fetch(`https://livepeer.studio/api/access-control/signing-key`, {
       method: 'POST',
       headers: {
