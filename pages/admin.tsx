@@ -46,6 +46,9 @@ export default function CreateStream() {
 
   return (
     <div className={styles.main}>
+      <h1 className={styles.title}>
+         Admin Dashboard
+      </h1>
       <div className={styles.main2}>
         {/* Creating keys */}
         <div className={styles.card}>

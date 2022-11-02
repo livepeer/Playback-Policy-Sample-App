@@ -78,7 +78,7 @@ export default function CreateStream() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           updateKeyId,
-          disable: disableKey,
+          // disable: disableKey,
           name: updateKeyName,
         }),
       });
@@ -108,6 +108,7 @@ export default function CreateStream() {
 
   return (
     <div className={styles.main}>
+      <h1 className={styles.title}>Settings Dashboard</h1>
       <div className={styles.main2}>
         {/* Get key info */}
         <form onSubmit={getKeyById} method='GET' className={styles.card}>
@@ -139,10 +140,8 @@ export default function CreateStream() {
             </div>
           )}
         </form>
-      </div>
 
-      {/* Apply Playback Policy */}
-      <div className={styles.main2}>
+        {/* Apply Playback Policy */}
         <form onSubmit={applyPlaybackPolicy} method='PATCH' className={styles.card}>
           <h2>Apply Playback Policy</h2>
           <label htmlFor='streamId'>Stream Id: </label>
@@ -175,7 +174,7 @@ export default function CreateStream() {
             onChange={(e) => setUpdateKeyId(e.target.value)}
           />
           <br />
-          <label htmlFor='stream'>Update Key Name: </label>
+          <label>Update Key Name: </label>
           <br />
           <input
             className={styles.input}
@@ -184,7 +183,7 @@ export default function CreateStream() {
             name='name'
             onChange={(e) => setUpdateKeyName(e.target.value)}
           />
-          <br />
+          {/* <br />
           <label htmlFor='disabledKey'>Disable Key</label>
           <br />
           <select name='disableKey' onChange={(e) => setSelectDisableKey(e.target.value)}>
@@ -193,7 +192,7 @@ export default function CreateStream() {
             </option>
             <option value={'true'}>Disable Key</option>
             <option value={'false'}>Enable Key</option>
-          </select>
+          </select> */}
 
           <br />
           <button type='submit' className={styles.button}>
