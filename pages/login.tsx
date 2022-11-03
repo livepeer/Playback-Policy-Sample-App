@@ -15,6 +15,15 @@ export default function Login() {
   const [disableButton, setDisablebutton] = useState<boolean>(false);
   const [playbackId, setPlaybackId] = useState<string>('b0aakwxhj9xpi1qf');
 
+  // Using Wagmi to get wallet information
+  const { address, isConnected, isDisconnected } = useAccount();
+  const { disconnect } = useDisconnect();
+  const { data } = useBalance({
+    addressOrName: address, //Getting wallet address with useAccount()
+    chainId: 5, //Goerli testnet});
+    formatUnits: 'ether', //in ethers
+  });
+
   const signIn = async () => {
     const nonceRes = await fetch('/api/nonce');
 
@@ -23,8 +32,9 @@ export default function Login() {
       address,
       statement: 'Sign in with Etherum to the app',
       uri: window.location.origin,
+      version: '1',
       chainId: chain?.id,
-      nonce: await nonceRes.text()
+      nonce: await nonceRes.text(),
     });
 
     const signature = await signMessageAsync({
@@ -78,15 +88,6 @@ export default function Login() {
     setVerifiedSignature('');
     setDisablebutton(false);
   }
-
-  // Using Wagmi to get wallet information
-  const { address, isConnected, isDisconnected } = useAccount();
-  const { disconnect } = useDisconnect();
-  const { data } = useBalance({
-    addressOrName: address, //Getting wallet address with useAccount()
-    chainId: 5, //Goerli testnet});
-    formatUnits: 'ether' //in ethers
-  });
 
   // Set minimum amount of Eth in wallet to view(ACL)
   const minimumEth = 0.001;
