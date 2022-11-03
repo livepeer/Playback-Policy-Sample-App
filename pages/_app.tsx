@@ -4,43 +4,26 @@ import Layout from '../components/Layout';
 import { LivepeerConfig, createReactClient, studioProvider } from '@livepeer/react';
 import { WagmiConfig, defaultChains, createClient, configureChains } from 'wagmi';
 
+import '@rainbow-me/rainbowkit/styles.css';
+
+import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+
 import { publicProvider } from 'wagmi/providers/public';
 import { infuraProvider } from 'wagmi/providers/infura';
-
-import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet';
-import { InjectedConnector } from 'wagmi/connectors/injected';
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
-import { WalletConnectConnector } from 'wagmi/connectors/walletConnect';
 
 
 const { chains, provider, webSocketProvider } = configureChains(defaultChains, [
   infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY }),
   publicProvider(),
-]);
+] );
+
+const { connectors } = getDefaultWallets( {
+  appName: 'Playback Policy',
+  chains
+})
 const wagmiClient = createClient({
   autoConnect: true,
-  connectors: [
-    new MetaMaskConnector({ chains }),
-    // new CoinbaseWalletConnector({
-    //   chains,
-    //   options: {
-    //     appName: 'Playback Policy',
-    //   },
-    // }),
-    // new WalletConnectConnector({
-    //   chains,
-    //   options: {
-    //     qrcode: true,
-    //   },
-    // }),
-    // new InjectedConnector({
-    //   chains,
-    //   options: {
-    //     name: 'Injected',
-    //     shimDisconnect: true,
-    //   },
-    // }),
-  ],
+  connectors,
   provider,
   webSocketProvider,
 });
@@ -57,11 +40,13 @@ function MyApp( { Component, pageProps }: AppProps ) {
   return (
     <>
       <WagmiConfig client={wagmiClient}>
-          <LivepeerConfig client={client}>
-            <Layout>
+        <LivepeerConfig client={client}>
+          <Layout>
+            <RainbowKitProvider chains={chains}>
               <Component {...pageProps} />
-            </Layout>
-          </LivepeerConfig>
+            </RainbowKitProvider>
+          </Layout>
+        </LivepeerConfig>
       </WagmiConfig>
     </>
   );

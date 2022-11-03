@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { useAccount, useBalance, useNetwork, useSignMessage, useConnect, useDisconnect } from 'wagmi';
 import { SiweMessage } from 'siwe';
 import styles from '../styles/Home.module.css';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export default function Login() {
   const { chain } = useNetwork();
@@ -17,7 +18,6 @@ export default function Login() {
 
   // Using Wagmi to get wallet information
   const { address, isConnected, isDisconnected } = useAccount();
-  const { disconnect } = useDisconnect();
   const { data } = useBalance({
     addressOrName: address, //Getting wallet address with useAccount()
     chainId: 5, //Goerli testnet});
@@ -106,26 +106,7 @@ export default function Login() {
           {/* Getting wallets */}
           <div>
             <div>
-              {connectors.map((connector) => (
-                <button
-                  className={styles.button}
-                  disabled={!connector.ready}
-                  key={connector.id}
-                  onClick={() => connect({ connector })}
-                >
-                  {connector.name}
-                  {!connector.ready && ' (unsupported)'}
-                  {isLoading && connector.id === pendingConnector?.id && ' (connecting)'}
-                </button>
-              ))}
-              {error && <div>{error.message}</div>}
-              {isConnected ? (
-                <button className={styles.button} onClick={() => disconnect()}>
-                  Disconnect
-                </button>
-              ) : (
-                <></>
-              )}
+              <ConnectButton />
             </div>
           </div>
 
