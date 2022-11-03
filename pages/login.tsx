@@ -17,7 +17,6 @@ export default function Login() {
 
   const signIn = async () => {
     const nonceRes = await fetch('/api/nonce');
-    const nonce = await nonceRes.text();
 
     const message = new SiweMessage({
       domain: window.location.host,
@@ -25,7 +24,7 @@ export default function Login() {
       statement: 'Sign in with Etherum to the app',
       uri: window.location.origin,
       chainId: chain?.id,
-      nonce,
+      nonce: await nonceRes.text()
     });
 
     const signature = await signMessageAsync({
