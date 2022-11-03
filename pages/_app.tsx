@@ -6,7 +6,7 @@ import { WagmiConfig, defaultChains, createClient, configureChains } from 'wagmi
 
 import '@rainbow-me/rainbowkit/styles.css';
 
-import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { getDefaultWallets, RainbowKitProvider, midnightTheme } from '@rainbow-me/rainbowkit';
 
 import { publicProvider } from 'wagmi/providers/public';
 import { infuraProvider } from 'wagmi/providers/infura';
@@ -42,7 +42,7 @@ function MyApp( { Component, pageProps }: AppProps ) {
       <WagmiConfig client={wagmiClient}>
         <LivepeerConfig client={client}>
           <Layout>
-            <RainbowKitProvider chains={chains}>
+            <RainbowKitProvider chains={chains} theme={midnightTheme()}>
               <Component {...pageProps} />
             </RainbowKitProvider>
           </Layout>
