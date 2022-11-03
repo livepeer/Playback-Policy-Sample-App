@@ -21,7 +21,7 @@ export default function Login() {
   const { data } = useBalance({
     addressOrName: address, //Getting wallet address with useAccount()
     chainId: 5, //Goerli testnet});
-    formatUnits: 'ether', //in ethers
+    formatUnits: 'ether', //in ether
   });
 
   const signIn = async () => {
