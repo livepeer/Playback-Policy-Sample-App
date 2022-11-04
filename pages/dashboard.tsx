@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { FormEvent, useEffect, useState } from 'react';
 import styles from '../styles/Home.module.css';
+import axios from 'axios';
 
 interface KeyInfo {
   id: string;
@@ -25,12 +26,22 @@ export default function CreateStream() {
   const [createdAt, setCreatedAt] = useState<string>();
   const [publicKey, setPublicKey] = useState<string>();
   const [privateKey, setPrivateKey] = useState<string>();
-  const [disabledCreate, setDisabledCreate] = useState<boolean>(false);
-  const [selectDisableKey, setSelectDisableKey] = useState<string>();
-  const [disableKey, setDisableKey] = useState<boolean>(false);
 
 
- 
+
+  // Get key by Id
+  async function getKeyById(e: FormEvent) {
+    e.preventDefault();
+    try {
+      const response = await fetch(`/api/keyInfo/${getKeyId}`, {
+        method: 'GET',
+      });
+      const data = await response.json();
+      setSignKeyInfo(data);
+      console.log(data);
+    } catch (error) {}
+  }
+
   // Apply playback policy to stream
   async function applyPlaybackPolicy(e: FormEvent) {
     e.preventDefault();
@@ -50,41 +61,48 @@ export default function CreateStream() {
     }
   }
 
-  // Get key by Id
-  async function getKeyById(e: FormEvent) {
-    e.preventDefault();
-    try {
-      const response = await fetch(`/api/keyInfo/${getKeyId}`, {
-        method: 'GET',
-      });
-      const data = await response.json();
-      setSignKeyInfo(data);
-      console.log(data);
-    } catch (error) {}
-  }
-
   // Update key
   async function updateKey(e: FormEvent) {
     e.preventDefault();
     try {
-      if (selectDisableKey === 'true') {
-        setDisableKey(true);
-      }
-      if (selectDisableKey === 'false') {
-        setDisableKey(false);
-      }
-      await fetch(`/api/updateKey`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          updateKeyId,
-          // disable: disableKey,
-          name: updateKeyName,
-        }),
+      await axios.patch('/api/updateKey', {
+        updateKeyId,
+        name: updateKeyName,
       });
     } catch (error) {
       console.log(error);
     }
+    setUpdateKeyId('');
+    setUpdateKeyName('');
+  }
+
+  // Disable Key
+
+  async function disable(e: FormEvent) {
+    e.preventDefault();
+    try {
+      await axios.patch('/api/updateKey', {
+        updateKeyId,
+        disabled: true,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    setUpdateKeyId('');
+  }
+
+  // Disable Key
+  async function enable(e: FormEvent) {
+    e.preventDefault();
+    try {
+      await axios.patch('/api/updateKey', {
+        updateKeyId,
+        disabled: false,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    setUpdateKeyId('');
   }
 
   //Delete Key
@@ -161,7 +179,7 @@ export default function CreateStream() {
         </form>
 
         {/* Update signing key */}
-        <form onSubmit={updateKey} method='PATCH' className={styles.card}>
+        <div className={styles.card}>
           <h2>Update Signing Key</h2>
           <label htmlFor='stream'>Key Id: </label>
           <br />
@@ -169,7 +187,7 @@ export default function CreateStream() {
             className={styles.input}
             type='text'
             value={updateKeyId}
-            name='name'
+            name='keyId'
             required
             onChange={(e) => setUpdateKeyId(e.target.value)}
           />
@@ -183,22 +201,20 @@ export default function CreateStream() {
             name='name'
             onChange={(e) => setUpdateKeyName(e.target.value)}
           />
-          {/* <br />
-          <label htmlFor='disabledKey'>Disable Key</label>
-          <br />
-          <select name='disableKey' onChange={(e) => setSelectDisableKey(e.target.value)}>
-            <option disabled selected>
-              Select an option
-            </option>
-            <option value={'true'}>Disable Key</option>
-            <option value={'false'}>Enable Key</option>
-          </select> */}
 
           <br />
-          <button type='submit' className={styles.button}>
+          <button onClick={updateKey} className={styles.button}>
             Update
           </button>
-        </form>
+          <br />
+          <p>Enable/Disable key</p>
+          <button onClick={disable} className={styles.button}>
+            Disable Key
+          </button>
+          <button onClick={enable} className={styles.button}>
+            Enable Key
+          </button>
+        </div>
 
         {/* Delete Signing Key */}
         <form onSubmit={deleteKey} method='DELETE' className={styles.card}>
