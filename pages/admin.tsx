@@ -28,21 +28,22 @@ export default function CreateStream() {
       });
       const data = await response.json();
 
-     setCreateKeys(data)
 
+
+      setCreateKeys(data);
       setKeyID(data.id);
       setKeyName(data.name);
       setUserId(data.userId);
       setCreatedAt(data.createdAt);
       setPublicKey(data.publicKey);
-      setPrivateKey(data.privateKey);
-      // setPrivateKey(window.btoa(data.privateKey));
+      setPrivateKey( window.atob( data.privateKey ) );
       setDisabledCreate(true);
     } catch (error) {
       console.log(error);
     }
+    console.log(privateKey);
   }
-
+  
 
   return (
     <div className={styles.main}>
