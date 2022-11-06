@@ -27,8 +27,6 @@ export default function CreateStream() {
   const [publicKey, setPublicKey] = useState<string>();
   const [privateKey, setPrivateKey] = useState<string>();
 
-
-
   // Get key by Id
   async function getKeyById(e: FormEvent) {
     e.preventDefault();
@@ -41,6 +39,7 @@ export default function CreateStream() {
       console.log(data);
     } catch (error) {}
   }
+
 
   // Apply playback policy to stream
   async function applyPlaybackPolicy(e: FormEvent) {
@@ -59,6 +58,20 @@ export default function CreateStream() {
     } catch (error) {
       console.log(error);
     }
+    setStreamId('');
+  }
+
+  // Update playback policy
+  async function updatePlaybackPolicy( policy: string) {
+    try {
+      await axios.patch( '/api/updatePlaybackPolicy', {
+        streamId,
+          type: policy
+        } )
+    } catch (error) {
+      console.log(error);
+    }
+    setStreamId('');
   }
 
   // Update key
@@ -160,8 +173,8 @@ export default function CreateStream() {
         </form>
 
         {/* Apply Playback Policy */}
-        <form onSubmit={applyPlaybackPolicy} method='PATCH' className={styles.card}>
-          <h2>Apply Playback Policy</h2>
+        <div className={styles.card}>
+          <h2>Playback Policy</h2>
           <label htmlFor='streamId'>Stream Id: </label>
           <br />
           <input
@@ -173,10 +186,26 @@ export default function CreateStream() {
             onChange={(e) => setStreamId(e.target.value)}
           />
           <br />
-          <button type='submit' className={styles.button}>
+          <label htmlFor='policy'>Apply Playback Policy </label>
+          <br />
+          <button onClick={applyPlaybackPolicy} className={styles.button}>
             Apply Policy
           </button>
-        </form>
+          <br />
+          <label htmlFor='policy'>Update Playback Policy </label>
+          <br />
+          <button
+            value={streamId}
+            onClick={() => updatePlaybackPolicy('public')}
+            className={styles.button}
+          >
+            Public Policy
+          </button>
+
+          <button value={streamId} onClick={applyPlaybackPolicy} className={styles.button}>
+            Private Policy
+          </button>
+        </div>
 
         {/* Update signing key */}
         <div className={styles.card}>
@@ -235,10 +264,11 @@ export default function CreateStream() {
           </button>
         </form>
       </div>
+
       {/* Getting keys */}
-      {/* <Link className={styles.card} href='/signingKeys'>
+      <Link className={styles.card} href='/signingKeys'>
         Get Signing Keys
-      </Link> */}
+      </Link>
     </div>
   );
 }
