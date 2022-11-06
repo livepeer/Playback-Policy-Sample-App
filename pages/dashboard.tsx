@@ -263,12 +263,14 @@ export default function CreateStream() {
             Delete
           </button>
         </form>
-      </div>
 
-      {/* Getting keys */}
-      <Link className={styles.card} href='/signingKeys'>
-        Get Signing Keys
-      </Link>
+        {/* Getting keys */}
+        <div className={styles.card}>
+          <Link href='/signingKeys'>
+            Get Signing Keys
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

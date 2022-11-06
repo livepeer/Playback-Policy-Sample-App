@@ -110,6 +110,8 @@ export default function Login() {
             </div>
           </div>
 
+          { isConnected && Number( data?.formatted ) < minimumEth && <p className={styles.description}>Access Not Granted: Invalid funds or wallet</p> }
+
           {isConnected && Number(data?.formatted) > minimumEth && (
             <div>
               <button onClick={signIn} disabled={disableButton} className={styles.button}>
