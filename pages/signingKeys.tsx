@@ -1,5 +1,5 @@
 
- import {useState} from 'react';
+import {useState} from 'react';
 import styles from '../styles/Home.module.css';
 
 interface SigningKeysDetails {
@@ -8,7 +8,6 @@ interface SigningKeysDetails {
   userId: string;
   createdAt: string;
   publicKey: string;
-  children?: React.ReactNode[] | React.ReactNode;
 }
 
 
@@ -36,25 +35,23 @@ export default function SigningKeys() {
   }
 
   return (
-      <main className={styles.main}>
-        <>
-          <h1 className={styles.title}> Signing Keys</h1>
-          <button className={styles.button} onClick={gettingKeyInfo}>
-            Get List
-          </button>
-          {keyInfo.map((item) => {
-            <ul className={styles.grid}>
-              <div className={styles.card} key={item.id}>
-                <h2>Get Keys Info</h2>
-                <p>Key Id:{item.id} </p>
-                <p>Key Name:{item.name} </p>
-                <p>Public Key: {item.publicKey}</p>
-                <p>Created At: {item.createdAt}</p>
-                <p>User Id: {item.userId}</p>
-              </div>
-            </ul>;
-          })}
-        </>
-      </main>
+    <main className={styles.main}>
+      <h1 className={styles.title}> Signing Keys</h1>
+        <button className={styles.button} onClick={gettingKeyInfo}>
+          Get List
+        </button>
+        {keyInfo.map((item) => (
+          <ul className={styles.grid} key={item.id}>
+            <div className={styles.card}>
+              <h2>Get Keys Info</h2>
+              <p>Key Id:{item.id} </p>
+              <p>Key Name:{item.name} </p>
+              <p>Public Key: {item.publicKey}</p>
+              <p>Created At: {item.createdAt}</p>
+              <p>User Id: {item.userId}</p>
+            </div>
+          </ul>
+        ))}
+    </main>
   );
 }
