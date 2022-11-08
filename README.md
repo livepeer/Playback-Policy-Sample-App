@@ -2,6 +2,8 @@
 
 A sample application that demonstrates the features of Plyaback Policy for Livepeer Studio
 
+>NOTE: This app uses the Goerli testnest and requires the wallet to contain at least 0.001 testnet Eth 
+
 # ⏱ Quick Start
 
 Prerequisites: [Node (v16 LTS)](https://nodejs.org/en/download/) plus [npm](https://docs.npmjs.com/cli/v8/configuring-npm/install) and [Git](https://git-scm.com/downloads)
