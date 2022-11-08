@@ -1,6 +1,6 @@
 # ![Livepeer Studio Logo](public/favicon.ico) Livepeer Studio Sample App 
 
-A sample application that demonstrates the features of Livepeer Studio
+A sample application that demonstrates the features of Plyaback Policy for Livepeer Studio
 
 # ⏱ Quick Start
 
@@ -38,8 +38,6 @@ This sample app uses an API key from a monitored account made for public use. Wh
 
 ## Additional information
 
-
 [Playback Policy with LivepeerJS SDK](https://livepeerjs.org/examples/react/access-control)
 
-
-
+### For a more in-depth guide, [visit this page](/Guide/PlaybackPolicyGuide.md).
