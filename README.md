@@ -1,34 +1,45 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ![Livepeer Studio Logo](public/favicon.ico) Livepeer Studio Sample App 
 
-## Getting Started
+A sample application that demonstrates the features of Livepeer Studio
 
-First, run the development server:
+# ⏱ Quick Start
+
+Prerequisites: [Node (v16 LTS)](https://nodejs.org/en/download/) plus [npm](https://docs.npmjs.com/cli/v8/configuring-npm/install) and [Git](https://git-scm.com/downloads)
+
+> clone/fork 🎥 Livepeer Studio Playback Policy App:
+
+```bash
+git clone git@github.com:livepeer/Playback-Policy-Sample-App.git
+```
+
+> install Playback Policy App and dependencies:
+
+```bash
+cd playback-policy-sample-app
+npm install
+```
+
+> start Playback Policy Sample App:
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🔏 Setup environment Variable:
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+This sample app uses an API key from a monitored account made for public use. When customizing this for your own use,  setup a `.env` file and store you API key there for security.
+>Make sure to include the `.env` in the `.gitignore`
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+- [What are environment variables](https://www.freecodecamp.org/news/what-are-environment-variables-and-how-can-i-use-them-with-gatsby-and-netlify/)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- [dotenv](https://www.npmjs.com/package/dotenv)
 
-## Learn More
+- [Environment variables in NextJS](https://nextjs.org/docs/basic-features/environment-variables)
 
-To learn more about Next.js, take a look at the following resources:
+## Additional information
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+[Playback Policy with LivepeerJS SDK](https://livepeerjs.org/examples/react/access-control)
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
