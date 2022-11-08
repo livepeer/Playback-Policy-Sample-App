@@ -9,15 +9,10 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 export default function Login() {
   const { chain } = useNetwork();
   const { signMessageAsync, isSuccess } = useSignMessage();
-  const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
-
-
-  
-
   const [verifySignature, setVerifiedSignature] = useState<string>();
   const [token, setToken] = useState<string>();
   const [disableButton, setDisablebutton] = useState<boolean>(false);
-  const [playbackId, setPlaybackId] = useState<string>('d93a10vyv3b3ot12');
+  const [playbackId, setPlaybackId] = useState<string>('1934mbmfgie9r2p6');
 
 
 
@@ -57,7 +52,6 @@ export default function Login() {
         signature,
       }),
     });
-    // console.log(signature);
 
     // Generate JWT
     const createJWTRes = await fetch('/api/createJWT', {
@@ -71,13 +65,14 @@ export default function Login() {
       }),
     });
     const { token } = await createJWTRes.json();
-    // console.log(token);
+
 
     if (verifyRes.ok) {
       setVerifiedSignature(signature);
     }
     setToken(token);
-    setDisablebutton(true);
+    setDisablebutton( true );
+    
     // Decode token to get playbackId of stream
     if (token) {
       const decodedToken = jwt.decode(token) as { [key: string]: string };
@@ -94,7 +89,7 @@ export default function Login() {
     setDisablebutton(false);
   }
 
-  // Set minimum amount of Eth in wallet to view(ACL)
+  // Set minimum amount of Eth in wallet to view
   const minimumEth = 0.001;
 
   useEffect(() => {

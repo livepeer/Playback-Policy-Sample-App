@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken';
-import 'dotenv/config'
+// import 'dotenv/config'
 
 
 
@@ -8,11 +8,9 @@ import 'dotenv/config'
 export default async function handler( req: NextApiRequest, res: NextApiResponse ) {
   const { playbackId, address } = req.body;
 
-
+  // Need to decode the private key from base64
   const privatekey = process.env.PRIVATE_KEY;
   const decodePrivateKey = Buffer.from(privatekey!, 'base64').toString()
-  
-  console.log(decodePrivateKey);
   
   
   // Expires in 1 hour

@@ -29,7 +29,6 @@ const wagmiClient = createClient({
 });
 
 
-
 const client = createReactClient({
   provider: studioProvider({ apiKey: process.env.NEXT_PUBLIC_API_CORS }),
 });
